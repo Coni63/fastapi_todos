@@ -1,6 +1,7 @@
 from fastapi import APIRouter, HTTPException, status
 
-from app import SQLiteSaver, TodoItem
+from app.service.todo_item_service import TodoItemService
+from app.todos.todo_item import TodoItem
 
 router = APIRouter(
     prefix="/todos",
@@ -11,17 +12,21 @@ router = APIRouter(
 
 @router.get("/", tags=["todos"])
 async def get_all_todos():
-    saver = SQLiteSaver("database.db")
-    all_items = saver.get_all_items()
+    all_items = TodoItemService.get_all_todos()
     return all_items
+
+
+@router.get("/{id}", tags=["todos"])
+async def get_todo_by_id(id: int):
+    item = TodoItemService.get_todo_by_id(id)
+    return item
 
 
 @router.post("/create/", tags=["todos"], status_code=status.HTTP_201_CREATED)
 async def read_item(new_item: TodoItem) -> bool:
-    saver = SQLiteSaver("database.db")
-    valid = saver.save(new_item)
+    valid = TodoItemService.create_todo_item(new_item)
     if valid:
-        return True
+        return {"done": True}
 
     raise HTTPException(
         status_code=status.HTTP_400_BAD_REQUEST,
