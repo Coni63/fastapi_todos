@@ -1,7 +1,10 @@
-from sqlalchemy import create_engine
+import os
 
+from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, declarative_base
 
-engine = create_engine("postgresql+psycopg2://postgres:postgres@localhost:5432/postgres")
+import envs
+
+engine = create_engine(os.environ.get("CONNECTION_STR"))
 SessionLocal = sessionmaker(autoflush=False, bind=engine)
 Base = declarative_base()
