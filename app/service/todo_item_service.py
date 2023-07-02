@@ -24,11 +24,15 @@ class TodoItemService:
         pass
 
     @staticmethod
+    def patch_todo_by_id(id: int) -> TodoItem:
+        pass
+
+    @staticmethod
     def delete_todo_by_id(id: int):
         pass
 
     @staticmethod
-    def create_todo_item(data: TodoItem) -> TodoItem:
+    def create_todo_item(data: TodoItem) -> bool:
         session = SessionLocal()
         new_item = TodoItemModel(**data.as_dict())
         session.add(new_item)
